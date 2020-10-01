@@ -6,16 +6,22 @@
 * `mkdir` -> Crear una nueva carpeta
 * `del` -> Borrar archivo
 * `dotnet new console` -> Nuevo proyecto de aplicacion de consola
+* `dotnet new mstests` -> Proyecto de Unit Testing
+* `dotnet new web` -> Proyecto ASP.NET
 * `dotnet build` -> Compila el programa y lo pasa a un dll.
 * `dotnet run` -> Corre el programa
 * `dotnet restore` -> Ponerlo siempre antes de correr cualquier aplicacion por primera vez
 * `dotnet publish -c Debug -r win10-x64` -> Generar un .exe de la aplicacion para una arquitectura de 64 bits.
+* `dotnet --info` -> Nos dara informacion sobre las versiones que tenemos.
+* `dotnet -h` -> Para ver los comandos que tenemos disponibles
 
 # ¿Qué es C#?
 
 Es un lenguaje orientado a objetos que permite a los developers utilizar el framework .NET. Se puede usar para crear varias aplicaciones.
 
 # Framework .NET
+
+Para que C# pueda ser comprendido por nuestra CPU, debe haber un framework de por medio, en este caso, .NET. Este framework esta solo para Windows, pero, si usamos otra plataforma, tenemos **.NET Core** que es multiplataforma. 
 
 Esta compuesto por:
 
@@ -97,10 +103,9 @@ Console.WriteLine (s);
 
 # Diccionarios
 
-El diccionario consta de un elemento y su respectiva key. 
+El diccionario consta de un elemento y su respectiva key.
 
 * Creamos el diccionario -> `Dictionary<string, int> dict = new Dictionary<string, int> ();`
-
 * Podemos crear un diccionario e inicializarlo al mismo tiempo ->
 
   ```
@@ -108,15 +113,11 @@ El diccionario consta de un elemento y su respectiva key.
   {23, "Michael"},
   {91, "Dennis"}
   };
-  
+
   ```
-
 * Para agregar elementos al diccionario -> `dict.Add ("Ebenezer", 11);`
-
-* Para acceder al elemento -> `dict["Ebenezer"]` Esto devuelve 11. 
-
+* Para acceder al elemento -> `dict["Ebenezer"]` Esto devuelve 11.
 * Para saber la cantidad de elementos del diccionario -> `dict.Count`
-
 * Si quiero ver todas las keys de mi diccionario ->
 
   ```c#
@@ -126,13 +127,9 @@ El diccionario consta de un elemento y su respectiva key.
   var s = String.Join (", ", dict.Keys); //Tambien con dict.Values por si queremos acceder a los valores
   Console.WriteLine (s);//Esto devuelve 4 y 8, que son las keys
   ```
-
 * Si queremos borrar todo el diccionario ->  `Dicc.clear()`
-
 * Si queremos ver si existe alguna Key -> `Dicc.ContainsKey(Key);`
-
 * Para eliminar un elemento con cierta key -> ` Dicc.Remove(Key);`
-
 
 # Validaciones
 
@@ -173,4 +170,3 @@ int NumeroGanador = (new Random()).Next(0,participantes.count); --> Desde cero h
 
 Console.WriteLine(Participantes [NumeroGanador];
 ```
-
