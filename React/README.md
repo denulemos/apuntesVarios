@@ -318,7 +318,7 @@ class Counter extends React.Component {
 
 El `onClick` va a llamar a la funcion `increment()` y a sumarle uno al state counter.
 
-# Props vs State 👀️ 
+# Props vs State 👀️
 
 * Usamos las props para pasar data entre componentes
 * Los componentes usan los state para manejar su data
@@ -439,6 +439,111 @@ useEffect(() => {
 Se pueden tener varios Effects en un solo componente.
 
 # Eventos 🚀️
+
+Por ejemplo, si queremos agregarle un evento al hacer click en un boton, tendriamos que setear primero el onClick del mismo ->
+
+```javascript
+<button onClick={handleClick}>
+  My Button
+</button>
+```
+
+En el caso del contador, al apretar el boton, llamariamos a la funcion `increment()`
+
+```
+function Counter() {
+ const [counter, setCounter] = useState(0);
+
+ function increment() {
+   setCounter(counter+1);
+ }
+ return <div>
+ <p>{counter}</p>
+ <button onClick={increment}>Increment</button>
+ </div>;
+}
+```
+
+La funcion `increment()` va a llamar al `setCounter()` para cambiar el estado de la variable del state `counter`
+
+## User Inputs
+
+Podemos manejar los inputs del usuario mediante el `onChange()` en el ingreso de texto. Por ejemplo, si hacemos una app que cambie de km a millas, tendriamos que hacer algo asi ->
+
+```
+function Converter() {
+  const [km, setKm] = useState(0);
+
+  function handleChange(e) {
+    setKm(e.target.value);
+  }
+  function convert(km) {
+    return (km/1.609).toFixed(2);
+  }
+
+  return <div>
+  <input type="text" value={km}
+     onChange={handleChange} />
+  <p> {km} km is {convert(km)} miles </p>
+  </div>;
+}
+```
+
+`handleChange()` actualiza el state con el valor actual que el usuario ingreso en el cuadro de texto, para esto, el componente debe renderizarse de vuelta para mostrar el valor correspondiente que es calculado con la funcion `convert()`.
+
+# Formularios
+
+Por ejemplo, queremos hacer un fomrulario que tenga 1 input de un numero y un submit, y que por cada submit, el numero escrito se vaya sumando con los anteriores a medida que hacemos submit.
+
+```javascript
+function AddForm() {
+  const [sum, setSum] = useState(0);
+  const [num, setNum] = useState(0);
+
+  function handleChange(e) {
+    setNum(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    setSum(sum + Number(num));
+    e.preventDefault(); //Hace que la pagina no haga reload al hacer el submit
+  }
+
+  return <form onSubmit={handleSubmit}>
+  <input type="number" value={num} onChange={handleChange} />
+  <input type="submit" value="Add" />
+  <p> Sum is {sum} </p>
+  </form>;
+}
+```
+
+# Listas 
+
+Tenemos el siguiente array de Strings -> `const arr = ["A", "B", "C"];`
+Y necesitamos renderizar un `<li>` por cada elemento del array. Definimos un componente llamado `MyList` y le pasamos al array como prop -> `<MyList data={arr} />`
+Ahora, como podemos acceder al array mediante las props, hacemos la logica ->
+
+```
+function MyList(props) {
+  const arr = props.data;
+  const listItems = arr.map((val) =>
+    <li>{val}</li>
+  );
+  return <ul>{listItems}</ul>;
+}
+```
+
+Loopeamos entre los valores del array recibido y hacemos un elemento `<li>` por cada elemento de la lista. Luego de todo este proceso, se devuelven estos elementos envueltos en un `<ul>`
+
+## Keys
+
+Cada elemento en una lista debe tener una `key`, este actua como un identificador unico por elemento. Pueden salir de tu misma data o ser autogenerados.
+
+```
+const listItems = arr.map((val, index) =>
+  <li key={index}>{val}</li>
+);
+```
 
 
 
