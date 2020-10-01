@@ -1,5 +1,7 @@
 # React 🚀️
 
+Apuntes basados en SoloLearn.
+
 ## ¿Qué es el desarrollo Front-End?
 
 Se refiere al desarrollo de lo que el usuario final (cliente) va a ver. Consiste, básicamente, en HTML, CSS y JS. Como desarrolladores, somos consientes que a medida que las paginas van creciendo, se van haciendo cada vez mas complejas, y para manejar estas necesidades, se crearon librerías como React.
@@ -20,7 +22,7 @@ Hace que mantener aplicaciones complejas sea mucho mas fácil.
 
 Hay mucha comunidad atrás de este lenguaje. Esta mantenido por Facebook y su comunidad.
 
-# Getting Started ❤️ 
+# Getting Started ❤️
 
 ## Agregar React al HTML
 
@@ -138,7 +140,7 @@ Usamos el `setInterval` para llamar a la funcion `show()` que renderiza un eleme
 
 Para que React pueda actualizar solo lo necesario de una pagina, se usa el **Virtual DOM** que es una representacion del DOM. Cuando un elemento cambia, primero se actualiza el VDOM, esto es un proceso muy rapido. Luego, React compara al VDOM con el estado anterior y solo aplica los cambios necesarios para que el DOM ya este en el estado actual.
 
-# Componentes 👀️ 
+# Componentes 👀️
 
 Los componentes nos permiten separar la pagina en distintas partes reusables. Por ejemplo:
 
@@ -204,7 +206,239 @@ function Hello(props) {
 Y asi, luego, se lo podemos mandar
 `const el = <Hello name="David" />;`
 
+Los componentes pueden usar a otros componentes para generar un output, por ejemplo:
 
+```
+function App() {
+  return <div>
+    <Hello name="David" />
+    <Hello name="James" />
+    <Hello name="Amy" />
+  </div>;
+}
+```
+
+El codigo anterior, llama al componente Hello pero con distintos nombres.
+En los **componentes de clase** los props pueden ser accedidos de la siguiente manera:
+
+```
+class Hello extends React.Component {
+  render() {
+    return <p>Hello, {this.props.name}!</p>;
+  }
+}
+```
+
+Ahora, por ejemplo, creemos una lista de compras.
+Cada item va a tener un nombre y un precio -> `<Item name="Cheese" price="4.99" />`
+El componente item va a renderizar lo siguiente ->
+
+```
+function Item(props) {
+  return <div className="item">
+  <b>Name:</b> {props.name} <br />
+  <b>Price:</b> {props.price}
+  </div>;
+}
+```
+
+Ahora podemos usar el componente y renderizar varios items ->
+
+```
+<Item name="Cheese" price="4.99" />
+<Item name="Bread" price="1.5" />
+<Item name="Ice cream" price="24" />
+```
+
+# States 🚀️
+
+State es un objeto que es agregado como propiedad en los **componentes de clase**
+
+```
+class Hello extends React.Component {
+  state = {
+    name: "James"
+  }
+  render() {
+    return <h1>Hello {this.state.name}.</h1>;
+  }
+}
+```
+
+Al igual que las props, los state pueden ser accedidos medianrte `this.state...`. Cuando el componente se renderiza, el valor de, en este caso, 'name' se va a inicializar con James.
+El `state` no puede ser modificado de forma directa. React te da un metodo `setState()` para esto.
+
+```javascript
+this.setState({ 
+  name: "James",
+  age: 25
+});
+```
+
+Cuando `setState` es llamado, el componente se vuelve a renderizar automaticamente para que muestre el nuevo estado.
+
+**Counter App**
+
+Vamos a crear una aplicacion que incremente al counter cada vez que se toca al boton.
+Hacemos el componente **Counter** con un counter y un boton.
+
+```javascript
+class Counter extends React.Component {
+  state = {
+    counter: 0
+  }
+  render() {
+    return <div>
+    <p>{this.state.counter}</p>
+    <button>Increment</button>
+    </div>;
+  }
+}
+```
+
+Vamos a inicializar el state en 0. Ahora hacemos un evento para handlear al click en el boton.
+
+```
+class Counter extends React.Component {
+  state = {
+    counter: 0
+  }
+  increment = () => {
+   this.setState({
+     counter: this.state.counter+1});
+  }
+  render() {
+    return <div>
+    <p>{this.state.counter}</p>
+    <button **onClick={this.increment}**>Increment</button>
+    </div>;
+  }
+}
+```
+
+El `onClick` va a llamar a la funcion `increment()` y a sumarle uno al state counter.
+
+# Props vs State 👀️ 
+
+* Usamos las props para pasar data entre componentes
+* Los componentes usan los state para manejar su data
+* Las props son read-only, no se pueden modificar
+* Los State pueden ser modificados usando `setState()`
+* El `setState()` renderiza de vuelta al componente
+* Los componentes con state se llaman `stateful`, y los que no, `stateless`
+
+# Hooks 🚀️
+
+Las versiones mas viejas de React permitian usar los state solo con componentes de clase. Hace poco aparecieron los **Hooks**, que permiten usar los state dentro de componentes funcionales.
+Importamos la libreria ->
+`import React, { useState } from 'react';`
+Y asi lo manejamos ->
+
+```
+function Hello() {
+  const [name, setName] = useState("David");
+
+  return <h1>Hello {name}.</h1>;
+}
+```
+
+En el ejemplo, creamos el state 'name' y creamos el 'setName', que seria como el 'setState'.
+Aca podemos ver como se usa con la aplicacion del contador ->
+
+```
+function Counter() {
+  const [counter, setCounter] = useState(0);
+
+  function increment() {
+    setCounter(counter+1);
+  }
+
+  return <div>
+  <p>{counter}</p>
+  <button onClick={increment}>
+    Increment
+  </button>
+  </div>;
+}
+```
+
+Los hooks solo pueden ser usados dentro de un componente funcional.
+
+# Ciclos de Vida 🎉️
+
+React da metodos especificos para los ciclos de vida para los componentes de clase. Se llaman cuando el componente se monta, actualiza o desmonta.
+
+* Montar -> El componente se renderiza en la pagina
+* Desmontar -> El componente es removido de la pagina
+
+**componentDidMount()**
+Es llamado cuando el componente es **renderizado** es la pagina.  Se puede usar para inicializar cosas.
+
+```
+componentDidMount() {
+  this.setState({counter: 42});
+}
+```
+
+**componentWillUnmount()**
+Es llamado antes de que el componente vaya a ser desmontado del DOM. Se puede usar para librerar resources.
+
+**componentDidUpdate**
+Se llama cuando el componente se actualiza en el DOM. Podemos hacerlo, por ejemplo, para avisar cada vez que el counter se incrementa.
+
+```javascript
+componentDidUpdate() {
+alert("Number of clicks: " + this.state.counter);
+}
+```
+
+**useEffect()**
+Lo importamos ->
+`import React, { useState, useEffect } from 'react';`
+
+Es un hook para los componentes funcionales. Combina los metodos anteriores en uno. Por ejemplo, en el caso del contador ->
+
+```
+function Counter() {
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    alert("Number of clicks: " + counter);
+  });
+
+  function increment() {
+    setCounter(counter+1);
+  }
+  return <div>
+  <p>{counter}</p>
+  <button onClick={increment}>Increment</button>
+  </div>;
+}
+```
+
+En este caso, va a correr cuando el componente se monte y se actualice. Si queremos que corra solo ante el update del componente, agregamos lo siguiente:
+
+```
+useEffect(() => {
+  //do something
+}, [count]);
+```
+
+Y si queremos un **componentWillUnmount**, useEffect puede devolver una funcion que "limpie" lo necesario
+
+```
+useEffect(() => {
+  // do something
+  
+  return () => {
+    // cleanup
+  }; 
+});
+```
+
+Se pueden tener varios Effects en un solo componente.
+
+# Eventos 🚀️
 
 
 
