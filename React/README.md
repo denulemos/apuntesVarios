@@ -24,7 +24,7 @@ Hay mucha comunidad atrás de este lenguaje. Esta mantenido por Facebook y su co
 
 # Getting Started ❤️
 
-## Agregar React al HTML
+### Agregar React al HTML
 
 Primero, tenemos que agregar a React en la etiqueta `<head>` de nuestro HTML.
 
@@ -53,7 +53,7 @@ ReactDOM.render(
 
 Este Script busca el div con el ID 'Container' y le agrega el `<h1>`
 
-## Crear una Aplicación React
+### Crear una Aplicación React
 
 En este caso, vamos a necesitar Node para crear un proyecto React. Vamos a crear una aplicación llamada "my-app"
 
@@ -63,7 +63,7 @@ cd my-app
 npm start
 ```
 
-## Estructura del proyecto
+### Estructura del proyecto
 
 * public -> Contiene todo lo que la aplicacion va a mostrar al cliente, como el `index.html` que es el template de nuestra pagina.
 * src -> Contiene todo el JS, CSS e imagenes que van a ser compilados en el `index.html`
@@ -85,7 +85,7 @@ ReactDOM.render(
 
 # JSX ❤️
 
-## ¿Qué es JSX?
+### ¿Qué es JSX?
 
 Es una extension de Javascript que nos permite construir elementos de la UI usando codigo HTML pero en el medio del JS. No es obligatorio usarlo, pero si muy comun.
 Por ejemplo ->
@@ -110,11 +110,11 @@ ReactDOM.render(
 );
 ```
 
-## Atributos en JSX
+### Atributos en JSX
 
 Podemos usar como atributos de un HTML nombres entre comillas como `<div id="container"></div>` o usar una expresion JS `<div id={user.id}></div>`
 
-## ¿Cómo funciona?
+### ¿Cómo funciona?
 
 Cuando las expresiones JSX con compiladas, se convierten en objetos JS, que representan elementos de React, y luego estos elementos son usados para constuir el DOM para luego, mostrarlo en el navegador.
 
@@ -148,7 +148,7 @@ Los componentes nos permiten separar la pagina en distintas partes reusables. Po
 
 Cada parte numerada es un componente separado. Esto nos permite hacer **Separation of concerns**, un principio en programacion que dice que cada problema debe ser separado en piezas individuales.
 
-## Componentes de Función
+### Componentes de Función
 
 Es una funcion de JS
 
@@ -179,7 +179,7 @@ ReactDOM.render(
 );
 ```
 
-## Componentes de clase
+### Componentes de clase
 
 Son usados cuando hay interacciones con el usuario mas avanzadas, como formularios o animaciones.
 Todos necesitan heredar de React.Component
@@ -466,7 +466,7 @@ function Counter() {
 
 La funcion `increment()` va a llamar al `setCounter()` para cambiar el estado de la variable del state `counter`
 
-## User Inputs
+### User Inputs
 
 Podemos manejar los inputs del usuario mediante el `onChange()` en el ingreso de texto. Por ejemplo, si hacemos una app que cambie de km a millas, tendriamos que hacer algo asi ->
 
@@ -491,7 +491,7 @@ function Converter() {
 
 `handleChange()` actualiza el state con el valor actual que el usuario ingreso en el cuadro de texto, para esto, el componente debe renderizarse de vuelta para mostrar el valor correspondiente que es calculado con la funcion `convert()`.
 
-# Formularios
+## Formularios ❤️
 
 Por ejemplo, queremos hacer un fomrulario que tenga 1 input de un numero y un submit, y que por cada submit, el numero escrito se vaya sumando con los anteriores a medida que hacemos submit.
 
@@ -517,7 +517,7 @@ function AddForm() {
 }
 ```
 
-# Listas 
+### Listas
 
 Tenemos el siguiente array de Strings -> `const arr = ["A", "B", "C"];`
 Y necesitamos renderizar un `<li>` por cada elemento del array. Definimos un componente llamado `MyList` y le pasamos al array como prop -> `<MyList data={arr} />`
@@ -535,7 +535,7 @@ function MyList(props) {
 
 Loopeamos entre los valores del array recibido y hacemos un elemento `<li>` por cada elemento de la lista. Luego de todo este proceso, se devuelven estos elementos envueltos en un `<ul>`
 
-## Keys
+### Keys
 
 Cada elemento en una lista debe tener una `key`, este actua como un identificador unico por elemento. Pueden salir de tu misma data o ser autogenerados.
 
@@ -545,5 +545,175 @@ const listItems = arr.map((val, index) =>
 );
 ```
 
+# Manager de Contactos ❤️
 
+El mockup es el siguiente ->
+![componentes](./assets/mock.jpg)
+
+Podemos ver en principio que necesitamos 2 componentes:
+
+* AddPersonForm -> El escribir y agregar al contacto
+* PeopleList -> Ver lista de contactos
+
+**AddPersonForm**
+
+```
+function AddPersonForm() {
+  const [ person, setPerson ] = useState("");
+
+  function handleChange(e) {
+    setPerson(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+  return (
+    <form onSubmit={handleSubmit}>
+    <input type="text" 
+    placeholder="Add new contact" 
+    onChange={handleChange} 
+    value={person} />
+    <button type="submit">Add</button>
+    </form>
+    );
+}
+```
+
+**PeopleList**
+
+```
+function PeopleList(props) {
+  const arr = props.data;
+  const listItems = arr.map((val, index) =>
+    <li key={index}>{val}</li>
+  );
+  return <ul>{listItems}</ul>;
+}
+```
+
+**Renderizamos a los componentes e inicializamos data**
+
+```
+const contacts = ["James Smith", "Thomas Anderson", "Bruce Wayne"];
+
+const el = (
+  <div>
+    <AddPersonForm />
+    <PeopleList data={contacts} />
+  </div>
+);
+```
+
+## Compartiendo States
+
+Si tenemos dos componentes distintos, y necesitamos que uno compara cierto state con otro, debemos entonces crear un componente padre que contenga la data que necesita ser compartida entre componentes.
+
+**Nuevo Componente ContactManager**
+
+```javascript
+function ContactManager(props) {
+  const [contacts, setContacts] = useState(props.data);
+
+  return (
+    <div>
+      <AddPersonForm />
+      <PeopleList data={contacts} />
+    </div>
+  );
+}
+```
+
+ContactManager recibe los contactos por props, los guarda en su state y se los pasa al componente hijo.
+**El padre puede pasarle data al hijo, pero el hijo no le puede pasar data al padre**
+
+### Agregando un contacto
+
+Creamos un metodo `addPerson()` en nuestro componente `ContactManager`
+
+```javascript
+function ContactManager(props) {
+  const [contacts, setContacts] = useState(props.data);
+
+  function addPerson(name) {
+    setContacts([...contacts, name]);
+  }
+ ...
+}
+```
+
+¿Cómo llamamos a esta funcion desde nuestro componente hijo (`AddPersonForm`)? Pasando la misma tambien como prop
+
+```
+function ContactManager(props) {
+  const [contacts, setContacts] = useState(props.data);
+
+  function addPerson(name) {
+    setContacts([...contacts, name]);
+  }
+
+  return (
+    <div>
+      <AddPersonForm handleSubmit={addPerson} />
+      <PeopleList data={contacts} />
+    </div>
+  );
+}
+```
+
+Se lo pasamos utilizando el `handleSubmit`, y ahora,  `AddPersonForm` puede utilizar esta funcion.
+
+```javascript
+function AddPersonForm(props) {
+  const [ person, setPerson ] = useState('');
+    
+  function handleChange(e) {
+    setPerson(e.target.value);
+  }
+    
+  function handleSubmit(e) {
+    props.handleSubmit(person);
+    setPerson('');
+    e.preventDefault();
+  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" 
+        placeholder="Add new contact" 
+        onChange={handleChange} 
+        value={person} />
+      <button type="submit">Add</button>
+    </form>
+  );
+}
+```
+
+# Redux 🚀️
+
+Hasta ahora pasabamos elementos por los `state` entre padre e hijo.
+**Redux** es una libreria de JS que puede ser usado con cualquier libreria de front-end, como Angular, React y JQuery.
+Sigue el principio de **Sigle Source of Truth**, es relocalizar todos los state y la logica por fuera de la app, para que cualquier componente acceda a lo que necesite.
+
+### Store
+
+En Redux, el state se guarda como un objeto, llamado `store`. Debe haber uno solo de estos por aplicacion.
+
+```javascript
+{
+  contacts: [{
+    name: 'David'
+  }, {
+    name: 'Amy'
+  }],
+  toggle: true
+}
+```
+
+### Actions y Reducers
+
+Un **Action** es un objeto plano de JS
+
+```
+
+```
 
