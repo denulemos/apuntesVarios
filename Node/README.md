@@ -1,5 +1,9 @@
 # NodeJS - Teoria
 
+## Manejo de Archivos - Asincronico
+
+
+
 ## Administradores de paquetes (Package Manager)
 
 Los package manager sirven para no tener que descargar, instalar y mantener las dependencias de un proyecto. Facilitan la descarga e instalacion de librerias del proyecto. Para esto se necesita saber el nombre del paquete, y a veces version del mismo. Con solo ejecutar un comando, se descargará un repositorio con la version correspondiente y se agregará al proyecto.
@@ -44,5 +48,63 @@ Si no quiero responder todo el cuestionario y generar un proyecto generico -> `n
 
 Con solo ejecutar un comando, podremos obtener las dependencias del proyecto, siempre y cuando esten en package.json -> `npm install` o `npm i`, esto para instalar y/o actualizar las dependencias.
 
+### Versionado
 
+Las librerias de NPM tienen una cierta semantica de versionado. Son 3 numeros:
+
+* El primer numero son grandes actualizaciones (**Major Release**)
+* El segundo numero son cambios pequeños o menores (**Minor Release**)
+* El tercer numero corresponde a Parches (**Patches**) que corrigen bugs.
+
+Ejemplo del archivo package.json con dependencias ->
+
+```
+{
+"name" : "proyecto",
+"version": "1.0.0",
+"description" : "",
+"main":"index.js",
+"scripts":{
+"test": "echo \"Error: no test"\" && exit 1"
+},
+"author": "",
+"license" : "ISC",
+"dependencies": {
+"express" : "^4.16.4",
+"joi": "~14.3.1",
+"sleep": "*1.2.0"
+},
+"devDependencies":{
+"jest" : "latest"
+}
+}
+```
+
+Podemos ver que cada version tiene un simbolito, el mismo indica como se va a actualizar la dependencia con cada `npm install`.
+
+* ~ Solo parches
+* ^ Solo actualizaciones menores y parches
+* (*) Todas las actualizaciones
+* (>) Actualizar a cualquier version posterior a la dada
+* (>=) Igual o posterior a la dada
+
+Si no se pone ningun simbolo, se acepta solo la version especificada.
+
+### Puntos de inicio del proyecto
+
+Dentro del package.json hay un objeto `scripts` que nos permitirá definir comandos personalizados para ejecutar el proyecto desde distintos puntos de entrada.
+
+```
+{
+...
+"scripts":{
+"start" : "node src/main.js",
+"test" : "node test/testAll.js",
+"empezar" : "node src/main.js"
+}
+
+}
+```
+
+Encontamos definidos dos puntos de inicio para nuestro programa, uno iniciará el servidor y otro va a ejecutar los tests. Entonces, cuando corremos un `npm start` estariamos corriendo el comando que le sigue. Tambien podemos definir nuestros propios comandos como "empezar", pero en ese caso, tendriamos que hacer un `npm run empezar`.
 
